@@ -379,40 +379,22 @@ HTML_TEMPLATE = """<!doctype html>
     }
 
     .home-hero {
-      min-height: min(560px, calc(100vh - 54px));
-      padding: clamp(30px, 4.8vw, 54px);
+      min-height: min(620px, calc(100vh - 54px));
+      padding: clamp(30px, 5vw, 58px);
       overflow: hidden;
       position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 690px) minmax(360px, 600px);
+      display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: clamp(26px, 4vw, 58px);
-      background: linear-gradient(180deg, rgba(255, 250, 242, 0.98) 0%, rgba(255, 250, 242, 0.92) 100%);
+      background:
+        linear-gradient(90deg, rgba(255, 250, 242, 0.98) 0%, rgba(255, 250, 242, 0.94) 44%, rgba(255, 250, 242, 0.64) 70%, rgba(255, 250, 242, 0.12) 100%),
+        url("mycode.png") right center / min(62vw, 760px) auto no-repeat,
+        #fffaf2;
     }
 
     .home-content {
-      width: 100%;
+      width: min(700px, 100%);
       position: relative;
       z-index: 1;
-    }
-
-    .home-visual {
-      justify-self: end;
-      width: 100%;
-      max-width: 600px;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(76, 56, 34, 0.08);
-      background: rgba(255, 255, 255, 0.84);
-      box-shadow: 0 18px 42px rgba(53, 39, 21, 0.1);
-    }
-
-    .home-visual img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
     }
 
     .home-kicker {
@@ -1118,17 +1100,15 @@ HTML_TEMPLATE = """<!doctype html>
       .home-hero {
         min-height: auto;
         padding: 28px 18px;
-        grid-template-columns: 1fr;
-        background: linear-gradient(180deg, rgba(255, 250, 242, 0.98) 0%, rgba(255, 250, 242, 0.92) 100%);
+        background:
+          linear-gradient(180deg, rgba(255, 250, 242, 0.98) 0%, rgba(255, 250, 242, 0.94) 58%, rgba(255, 250, 242, 0.84) 100%),
+          url("mycode.png") center bottom / min(96vw, 560px) auto no-repeat,
+          #fffaf2;
+        padding-bottom: min(42vw, 190px);
       }
 
       .home-hero h1 {
         max-width: 9ch;
-      }
-
-      .home-visual {
-        max-width: 100%;
-        padding: 8px;
       }
 
       .home-search {
@@ -1181,9 +1161,6 @@ HTML_TEMPLATE = """<!doctype html>
           <div class="home-stat"><strong>@@AWARD_COUNT@@</strong><span>获奖/提名</span></div>
         </div>
         <p class="home-follow">关注 AI感知笔记，获取 CVPR 资讯、论文速览和学习分享。</p>
-      </div>
-      <div class="home-visual">
-        <img src="mycode.png" alt="微信搜一搜 AI感知笔记">
       </div>
     </section>
 
