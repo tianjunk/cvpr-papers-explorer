@@ -350,6 +350,7 @@ HTML_TEMPLATE = """<!doctype html>
       min-height: 100vh;
       color: var(--ink);
       font-family: var(--sans);
+      overflow-x: hidden;
       background:
         radial-gradient(circle at top left, rgba(29, 122, 140, 0.08), transparent 26%),
         linear-gradient(180deg, #f7f3eb 0%, var(--bg) 100%);
@@ -968,11 +969,16 @@ HTML_TEMPLATE = """<!doctype html>
       align-items: start;
     }
 
+    .paper-top > div {
+      min-width: 0;
+    }
+
     .paper-title {
       margin: 0;
       font-size: 20px;
       line-height: 1.4;
-      letter-spacing: -0.02em;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
     }
 
     .paper-title a {
@@ -988,6 +994,7 @@ HTML_TEMPLATE = """<!doctype html>
       margin: 10px 0 0;
       font-size: 14px;
       line-height: 1.7;
+      overflow-wrap: anywhere;
     }
 
     .paper-links {
@@ -1052,6 +1059,7 @@ HTML_TEMPLATE = """<!doctype html>
       font-size: 14px;
       line-height: 1.8;
       white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
     .meta-item.award-tag {
@@ -1102,26 +1110,75 @@ HTML_TEMPLATE = """<!doctype html>
         padding: 28px 18px;
         background:
           linear-gradient(180deg, rgba(255, 250, 242, 0.98) 0%, rgba(255, 250, 242, 0.94) 58%, rgba(255, 250, 242, 0.84) 100%),
-          url("mycode.png") center bottom / min(96vw, 560px) auto no-repeat,
+          url("mycode.png") center calc(100% - 14px) / min(92vw, 500px) auto no-repeat,
           #fffaf2;
-        padding-bottom: min(42vw, 190px);
+        padding-bottom: clamp(138px, 36vw, 178px);
       }
 
       .home-hero h1 {
+        font-size: clamp(36px, 13vw, 52px);
         max-width: 9ch;
+      }
+
+      .home-lead {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .home-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .home-action {
+        width: 100%;
+        padding: 0 12px;
       }
 
       .home-search {
         flex-direction: column;
       }
 
+      .home-search input,
+      .home-search button {
+        width: 100%;
+      }
+
       .home-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .home-category-grid {
+        grid-template-columns: 1fr;
       }
 
       .home-quick-head {
         align-items: stretch;
         flex-direction: column;
+      }
+
+      .sidebar {
+        overflow-x: auto;
+        padding: 12px;
+      }
+
+      .level1-list {
+        display: flex;
+        gap: 8px;
+        margin-top: 0;
+        min-width: max-content;
+      }
+
+      .level1-btn {
+        width: 180px;
+        min-height: 64px;
+        padding: 11px 12px;
+        border-radius: 14px;
+      }
+
+      .level1-title {
+        margin-top: 0;
+        font-size: 13px;
       }
 
       .toolbar-row,
@@ -1135,6 +1192,78 @@ HTML_TEMPLATE = """<!doctype html>
       .controls,
       .scope-row {
         justify-content: flex-start;
+      }
+
+      .controls {
+        width: 100%;
+      }
+
+      .control {
+        flex: 1 1 130px;
+      }
+
+      .control select {
+        width: 100%;
+      }
+
+      .code-toggle {
+        flex: 1 1 96px;
+        justify-content: center;
+      }
+
+      .button.small {
+        flex: 0 0 42px;
+      }
+
+      .paper-card {
+        padding: 14px;
+        border-radius: 14px;
+      }
+
+      .paper-title {
+        font-size: 17px;
+      }
+
+      .paper-links {
+        margin-top: 4px;
+      }
+
+      .paper-abstract {
+        font-size: 13px;
+        line-height: 1.7;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .app {
+        width: min(100vw - 10px, 100%);
+        margin-top: 5px;
+      }
+
+      .home-hero {
+        padding: 22px 14px;
+        padding-bottom: 132px;
+      }
+
+      .home-stats {
+        gap: 8px;
+      }
+
+      .home-stat {
+        padding: 10px;
+      }
+
+      .home-stat strong {
+        font-size: 17px;
+      }
+
+      .toolbar,
+      .section {
+        padding: 14px;
+      }
+
+      .search-box {
+        flex-basis: auto;
       }
     }
   </style>
