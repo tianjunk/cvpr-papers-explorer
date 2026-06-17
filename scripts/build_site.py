@@ -384,12 +384,23 @@ HTML_TEMPLATE = """<!doctype html>
       padding: clamp(30px, 5vw, 58px);
       overflow: hidden;
       position: relative;
+      isolation: isolate;
       display: flex;
       align-items: center;
       background:
-        linear-gradient(90deg, rgba(255, 250, 242, 0.98) 0%, rgba(255, 250, 242, 0.94) 44%, rgba(255, 250, 242, 0.64) 70%, rgba(255, 250, 242, 0.12) 100%),
-        url("mycode.png") right center / min(62vw, 760px) auto no-repeat,
+        linear-gradient(90deg, rgba(255, 250, 242, 0.99) 0%, rgba(255, 250, 242, 0.96) 46%, rgba(255, 250, 242, 0.76) 72%, rgba(255, 250, 242, 0.36) 100%),
         #fffaf2;
+    }
+
+    .home-hero::after {
+      content: "";
+      position: absolute;
+      inset: clamp(24px, 4vw, 50px) clamp(18px, 4vw, 46px) clamp(24px, 4vw, 50px) auto;
+      width: min(58vw, 720px);
+      background: url("mycode.png") center / contain no-repeat;
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .home-content {
@@ -740,6 +751,10 @@ HTML_TEMPLATE = """<!doctype html>
       gap: 10px;
       align-items: center;
       flex-wrap: wrap;
+    }
+
+    .control.mobile-level1-control {
+      display: none;
     }
 
     .control {
@@ -1109,10 +1124,15 @@ HTML_TEMPLATE = """<!doctype html>
         min-height: auto;
         padding: 28px 18px;
         background:
-          linear-gradient(180deg, rgba(255, 250, 242, 0.98) 0%, rgba(255, 250, 242, 0.94) 58%, rgba(255, 250, 242, 0.84) 100%),
-          url("mycode.png") center calc(100% - 14px) / min(92vw, 500px) auto no-repeat,
+          linear-gradient(180deg, rgba(255, 250, 242, 0.99) 0%, rgba(255, 250, 242, 0.96) 54%, rgba(255, 250, 242, 0.88) 100%),
           #fffaf2;
-        padding-bottom: clamp(138px, 36vw, 178px);
+      }
+
+      .home-hero::after {
+        inset: auto -46px 8px auto;
+        width: min(78vw, 320px);
+        height: min(42vw, 180px);
+        opacity: 0.13;
       }
 
       .home-hero h1 {
@@ -1149,7 +1169,16 @@ HTML_TEMPLATE = """<!doctype html>
       }
 
       .home-category-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+      }
+
+      .home-category-btn {
+        min-height: 76px;
+        padding: 12px;
+      }
+
+      .home-category-btn strong {
+        font-size: 13px;
       }
 
       .home-quick-head {
@@ -1157,35 +1186,22 @@ HTML_TEMPLATE = """<!doctype html>
         flex-direction: column;
       }
 
+      .layout {
+        min-height: 100vh;
+      }
+
       .sidebar {
-        overflow-x: auto;
-        padding: 12px;
-      }
-
-      .level1-list {
-        display: flex;
-        gap: 8px;
-        margin-top: 0;
-        min-width: max-content;
-      }
-
-      .level1-btn {
-        width: 180px;
-        min-height: 64px;
-        padding: 11px 12px;
-        border-radius: 14px;
-      }
-
-      .level1-title {
-        margin-top: 0;
-        font-size: 13px;
+        display: none;
       }
 
       .toolbar-row,
-      .paper-top,
-      .scope-row {
+      .paper-top {
         flex-direction: column;
         align-items: stretch;
+      }
+
+      .scope-row {
+        align-items: flex-start;
       }
 
       .paper-links,
@@ -1195,6 +1211,12 @@ HTML_TEMPLATE = """<!doctype html>
       }
 
       .controls {
+        width: 100%;
+      }
+
+      .controls .mobile-level1-control {
+        display: inline-flex;
+        flex: 1 1 100%;
         width: 100%;
       }
 
@@ -1242,7 +1264,12 @@ HTML_TEMPLATE = """<!doctype html>
 
       .home-hero {
         padding: 22px 14px;
-        padding-bottom: 132px;
+      }
+
+      .home-hero::after {
+        right: -64px;
+        width: 290px;
+        height: 150px;
       }
 
       .home-stats {
@@ -1317,6 +1344,9 @@ HTML_TEMPLATE = """<!doctype html>
               <input id="searchInput" type="text" placeholder="搜索">
             </div>
             <div class="controls">
+              <div class="control mobile-level1-control">
+                <select id="mobileLevel1Select" aria-label="选择方向"></select>
+              </div>
               <div class="control">
                 <select id="daySelect"></select>
               </div>
@@ -1356,6 +1386,7 @@ HTML_TEMPLATE = """<!doctype html>
 
     const level1List = document.getElementById("level1List");
     const searchInput = document.getElementById("searchInput");
+    const mobileLevel1Select = document.getElementById("mobileLevel1Select");
     const daySelect = document.getElementById("daySelect");
     const codeOnlyToggle = document.getElementById("codeOnlyToggle");
     const clearFiltersBtn = document.getElementById("clearFiltersBtn");
@@ -1523,6 +1554,18 @@ HTML_TEMPLATE = """<!doctype html>
       daySelect.value = current;
     }
 
+    function fillMobileLevel1Select(baseFiltered) {
+      const counts = countBy(baseFiltered, "category_level1");
+      mobileLevel1Select.innerHTML = "";
+      for (const level1 of LEVEL1_ORDER) {
+        const option = document.createElement("option");
+        option.value = level1;
+        option.textContent = `${label1(level1)} (${counts.get(level1) || 0})`;
+        mobileLevel1Select.appendChild(option);
+      }
+      mobileLevel1Select.value = state.level1;
+    }
+
     function renderLevel1(baseFiltered) {
       const counts = countBy(baseFiltered, "category_level1");
       level1List.innerHTML = LEVEL1_ORDER.map(level1 => {
@@ -1673,9 +1716,10 @@ HTML_TEMPLATE = """<!doctype html>
       paperList.innerHTML = renderPaperCards(items);
     }
 
-    function updateControls() {
+    function updateControls(baseFiltered) {
       searchInput.value = state.query;
       homeSearchInput.value = state.query;
+      fillMobileLevel1Select(baseFiltered);
       fillDaySelect();
       codeOnlyToggle.checked = state.codeOnly;
     }
@@ -1703,7 +1747,7 @@ HTML_TEMPLATE = """<!doctype html>
       }
 
       applyTheme();
-      updateControls();
+      updateControls(baseFiltered);
       updateTitle();
       renderLevel1(baseFiltered);
       renderScope();
@@ -1714,6 +1758,12 @@ HTML_TEMPLATE = """<!doctype html>
 
     searchInput.addEventListener("input", event => {
       state.query = event.target.value.trim();
+      render();
+    });
+
+    mobileLevel1Select.addEventListener("change", event => {
+      state.level1 = event.target.value;
+      state.level2 = "";
       render();
     });
 
